@@ -7,6 +7,7 @@ Projeto criado com fins de aprendizado — praticando Programação Orientada a 
 ## Funcionalidades (v1)
 
 - Consultar/acessar o estoque
+- Consultar o preço de um produto sem iniciar venda
 - Iniciar uma venda
 - Adicionar itens à venda por código (com suporte a quantidade)
 - Cálculo automático do total
@@ -46,10 +47,27 @@ python ui.py
 
 ## Backlog futuro
 
+### Gestão de estoque
 - Cadastro de novo produto pela interface
-- Exportação de relatórios de vendas
+- Edição de produto existente (preço, nome, etc.)
+- Alerta visual de estoque baixo (produtos abaixo de um limite mínimo)
+- Remover produto do catálogo
+
+### Vendas
 - Cálculo de descontos
-- Consulta de preço sem iniciar venda
-- Login de usuário
+- Remover um item já escaneado, antes de finalizar a venda
 - Múltiplas formas de pagamento
+- Cancelar a venda inteira em andamento (sem salvar nada)
+
+### Relatórios / Análise
+- Exportação de relatório de vendas
+- Produto mais vendido / ranking de vendas
+- Total vendido no dia/período
+
+> **Dependência importante:** hoje, uma vez que a venda é finalizada, os dados dela em si se perdem — só o reflexo no estoque fica salvo. Praticamente todo o bloco de Relatórios depende de um histórico de vendas persistido, que ainda não existe. Provavelmente é o primeiro passo de infraestrutura necessário antes de atacar essa área.
+
+### Outros
+- Login de usuário / permissões por funcionário
+- Trocar a planilha Excel por um banco de dados
+- Testes automatizados
 - Integração com leitor de código de barras físico (a arquitetura já contempla essa evolução — o leitor simula teclado + Enter, o que já é o comportamento esperado pelo campo de escaneamento)

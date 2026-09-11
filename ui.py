@@ -53,9 +53,14 @@ class App:
         # ao mesmo tempo (uma é sempre escondida com pack_forget()).
         self.tela_venda = ctk.CTkFrame(self.app, fg_color="#F5F5F5")
         
+        self.tela_consulta = ctk.CTkFrame(self.app, fg_color="#F5F5F5")
+        
         # Cabeçalho da "tabela" de itens, calculado uma única vez (é sempre
         # o mesmo texto) e reinserido a cada redesenho da caixa_itens.
         self.cabecalho = f"{'Cód':<8}{'Descrição':<30}{'Qtd':>4}{'Vl.Unit':>10}{'Vl.Total':>10}\n"
+        
+        self.frame_botoes_inicial = ctk.CTkFrame(self.tela_inicial, fg_color="transparent")
+        self.frame_botoes_inicial.grid(row=2, column=0)
         
         self.label_boas_vindas = ctk.CTkLabel(
             self.tela_inicial, 
@@ -65,7 +70,7 @@ class App:
         self.label_boas_vindas.grid(row=1, column=0, pady=(0, 20))
         
         self.botao_iniciar_venda = ctk.CTkButton(
-            self.tela_inicial, 
+            self.frame_botoes_inicial, 
             text="Iniciar Venda", 
             command=self.ao_clicar_iniciar, 
             fg_color="#1E3A5F", 
@@ -74,7 +79,19 @@ class App:
             corner_radius=12, 
             font=self.fonte_botao
         )
-        self.botao_iniciar_venda.grid(row=2, column=0)
+        self.botao_iniciar_venda.pack(side="left", padx=10)
+        
+        self.botao_consultar_preco = ctk.CTkButton(
+            self.frame_botoes_inicial,
+            text="Consultar Preço",
+            command=self.ao_clicar_consulta,
+            fg_color="#D9D9D9",
+            text_color="#1A1A1A",
+            hover_color="#C4C4C4",
+            corner_radius=12,
+            font=self.fonte_botao
+        )
+        self.botao_consultar_preco.pack(side="left", padx=10)
         
         self.caixa_itens = ctk.CTkTextbox(
             self.tela_venda, 
@@ -135,6 +152,31 @@ class App:
             font=self.fonte_botao
         )
         self.botao_finalizar.pack(pady=10)
+        
+        self.campo_codigo_consulta = ctk.CTkEntry(
+            self.tela_consulta,
+            placeholder_text="Escaneie o Código",
+            font=self.fonte_campo
+        )
+        self.campo_codigo_consulta.pack(pady=20)
+        self.campo_codigo_consulta.bind("<Return>", self.ao_consultar)
+        
+        self.label_resultado_consulta = ctk.CTkLabel(
+            self.tela_consulta, 
+            text="", 
+            font=self.fonte_total, 
+            text_color="#1E3A5F"
+        )
+        self.label_resultado_consulta.pack(pady=20)
+
+        self.botao_voltar_consulta = ctk.CTkButton(
+            self.tela_consulta, 
+            text="Voltar a Tela Inicial", 
+            command=self.ao_voltar_consulta, 
+            fg_color="#D9D9D9", 
+            text_color="#1A1A1A"
+        )
+        self.botao_voltar_consulta.pack(pady=10)
 
     def formatar_linha_item(self, item):
         """Formata um ItemVenda como uma linha de "recibo" (colunas alinhadas).
@@ -207,6 +249,26 @@ class App:
         self.botao_finalizar.pack_forget()
         self.label_status.pack_forget()
         self.botao_voltar_tela_inicial.pack(pady=10)
+
+    def ao_clicar_consulta(self):
+        self.tela_inicial.pack_forget()
+        self.tela_consulta.pack(fill="both", expand=True)
+    
+    def ao_consultar(self, event):
+        texto = self.campo_codigo_consulta.get()
+        try:
+            produto = self.vs.buscar_produto(texto)
+            self.label_resultado_consulta.configure(text=f"{produto.nome} — R${produto.preco:.2f}")
+        except ProdutoNaoEncontradoException as e:
+            self.label_resultado_consulta.configure(text=str(e))
+        
+        self.campo_codigo_consulta.delete(0, "end")
+            
+    def ao_voltar_consulta(self):
+        self.tela_consulta.pack_forget()
+        self.tela_inicial.pack(fill="both", expand=True)
+        self.label_resultado_consulta.configure(text="")
+            
 
     def rodar(self):
         # mainloop() bloqueia aqui até a janela ser fechada — por isso é

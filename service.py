@@ -32,3 +32,9 @@ class VendaService:
         self.venda_atual = None
 
         return total
+
+    def buscar_produto(self, codigo):
+        for produto in self.lista_produtos:
+            if codigo == produto.codigo:
+                return produto
+        raise ProdutoNaoEncontradoException("Produto não encontrado.")
