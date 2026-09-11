@@ -1,0 +1,19 @@
+# Cache e bytecode do Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual (caso volte a usar futuramente)
+.venv/
+venv/
+
+# Dados reais da loja — não devem ir para o repositório público
+estoque.xlsx
+
+# Artefatos de build do PyInstaller
+build/
+dist/
+*.spec
+
+# Arquivos de IDE
+.vscode/
+.idea/
