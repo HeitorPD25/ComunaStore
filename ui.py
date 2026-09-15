@@ -196,6 +196,7 @@ class App:
         self.tela_venda.pack(fill="both", expand=True)
         self.caixa_itens.delete("1.0", "end")
         self.label_status.configure(text="")
+        self.label_status.pack(pady=5)
         
         self.caixa_itens.insert("end", self.cabecalho, "negrito")
         
